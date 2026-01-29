@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-DDL Script: Create Gold Tables
+DDL Script: Create gold.dim_item Table
 ===============================================================================
 Script Purpose:
     This script creates tables in the 'gold' schema, dropping existing tables 
@@ -13,19 +13,12 @@ Script Purpose:
 USE h_db
 GO
 
-IF OBJECT_ID('gold.dim_item', 'U') IS NOT NULL
-    DROP TABLE gold.dim_item;
-GO
 
 CREATE TABLE gold.dim_item
 (
-    itemean CHAR(13) PRIMARY KEY CLUSTERED (itemean ASC),
-    arabic_name VARCHAR(50),
-    latin_name VARCHAR(50),
-    sub_group SMALLINT,
-    supplier INT,
-    last_update DATETIME,
-
-    -- 🔧 gold technical columns
-    gold_load_datetime DATETIME DEFAULT GETDATE()
+    itemean CHAR(13) PRIMARY KEY CLUSTERED (itemean ASC) NOT NULL,
+    arabic_name VARCHAR(50) NOT NULL,
+    latin_name VARCHAR(50) NOT NULL,
+    sub_group SMALLINT NOT NULL,
+    supplier INT NOT NULL,
 );
