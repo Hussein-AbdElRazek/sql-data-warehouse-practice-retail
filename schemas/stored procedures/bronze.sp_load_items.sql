@@ -1,34 +1,29 @@
 /*
 ===============================================================================
-Stored Procedure: Load Bronze Layer (ERP -> Bronze)
+Stored Procedure: Load Bronze Items (ERP -> Bronze)
 ===============================================================================
 Script Purpose:
-    This stored procedure loads data into the 'bronze' schema from erp database (retail). 
-    It performs the following actions:
-    - Truncates the bronze tables before loading data.
-    - Uses the `BULK INSERT` command to load data from erp db (retail) to bronze tables.
+    This stored procedure loads sys_items into the 'bronze' schema from erp database (retail). 
 
 Parameters:
     None. 
 	  This stored procedure does not accept any parameters or return any values.
 
 Usage Example:
-    EXEC bronze.load_bronze;
+    EXEC bronze.load_items;
 ===============================================================================
 */
 
-CREATE OR ALTER PROCEDURE bronze.load_bronze AS
+CREATE OR ALTER PROCEDURE bronze.load_items AS
 BEGIN
 	DECLARE @start_time DATETIME, @end_time DATETIME;
 	
 	BEGIN TRY
 		SET @start_time = GETDATE()
 		PRINT '================================================';
-		PRINT 'Loading Bronze Layer';
+		PRINT 'Loading Bronze Items';
 		PRINT '================================================';
 
-		PRINT '>> Truncating Table: bronze.erp_sys_item';
-		TRUNCATE TABLE bronze.erp_sys_item;
 		PRINT '>> Inserting Data Into: bronze.erp_sys_item';
 
 		INSERT INTO h_db.bronze.erp_sys_item (
@@ -253,7 +248,7 @@ BEGIN
 
 	BEGIN CATCH
 		PRINT '=========================================='
-		PRINT 'ERROR OCCURED DURING LOADING BRONZE LAYER'
+		PRINT 'ERROR OCCURED DURING LOADING BRONZE ITEMS'
 		PRINT 'Error Message' + ERROR_MESSAGE();
 		PRINT 'Error Message' + CAST (ERROR_NUMBER() AS NVARCHAR);
 		PRINT 'Error Message' + CAST (ERROR_STATE() AS NVARCHAR);

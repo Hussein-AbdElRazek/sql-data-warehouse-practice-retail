@@ -1,9 +1,9 @@
 /*
 ===============================================================================
-DDL Script: Create gold.dim_item Table
+DDL Script: Create gold.dim_supplier Table
 ===============================================================================
 Script Purpose:
-    This script creates tables in the 'gold' schema.
+    This script creates dim_supplier table in the 'gold' schema.
 ===============================================================================
 */
 
@@ -12,11 +12,10 @@ USE h_db
 GO
 
 
-CREATE TABLE gold.dim_item
+CREATE TABLE gold.dim_supplier
 (
-    itemean CHAR(13) PRIMARY KEY CLUSTERED (itemean ASC) NOT NULL,
+    supplier INT  NOT NULL,
     arabic_name VARCHAR(50) NOT NULL,
     latin_name VARCHAR(50) NOT NULL,
-    sub_group SMALLINT NOT NULL,
-    supplier INT NOT NULL,
+CONSTRAINT [pk_erp_sys_supplier] PRIMARY KEY NONCLUSTERED (supplier ASC)
 );

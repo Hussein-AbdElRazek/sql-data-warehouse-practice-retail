@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-DDL Script: Create Bronze Tables (erp_sys_item)
+DDL Script: Create (erp_sys_item) Bronze Table 
 ===============================================================================
 Script Purpose:
     This script creates erp_sys_item table in the 'bronze' schema.
