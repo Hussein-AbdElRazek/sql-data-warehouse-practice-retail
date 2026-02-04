@@ -1,6 +1,6 @@
 /*
 ===============================================================================
-Stored Procedure: Load GOLD supplier 
+Stored Procedure: Load GOLD doctype 
 ===============================================================================
 
 Parameters:
@@ -8,27 +8,27 @@ Parameters:
 	  This stored procedure does not accept any parameters or return any values.
 
 Usage Example:
-    EXEC gold.load_supplier;
+    EXEC gold.load_doctype;
 ===============================================================================
 */
 
-CREATE OR ALTER PROCEDURE gold.load_supplier AS
+CREATE OR ALTER PROCEDURE gold.load_doctype AS
 BEGIN
 	DECLARE @start_time DATETIME, @end_time DATETIME;
 	
 	BEGIN TRY
 		SET @start_time = GETDATE()
 		PRINT '================================================';
-		PRINT 'Loading gold supplier';
+		PRINT 'Loading gold doctype';
 		PRINT '================================================';
 		
-		MERGE gold.dim_supplier AS target
-		USING silver.erp_sys_supplier AS source
-		ON target.supplier = source.supplier
+		MERGE gold.dim_documents_types AS target
+		USING silver.erp_sys_doctype AS source
+		ON target.doctype = source.doctype
 		WHEN MATCHED
 			AND
 				target.arabic_name != source.arabic_name OR
-				target.latin_name != source.latin_name 
+				target.latin_name != source.latin_name OR
 			THEN
 				UPDATE SET
 					target.arabic_name = source.arabic_name,
@@ -57,7 +57,7 @@ BEGIN
 
 	BEGIN CATCH
 		PRINT '=========================================='
-		PRINT 'ERROR OCCURED DURING LOADING GOLD SUPPLIER'
+		PRINT 'ERROR OCCURED DURING LOADING GOLD doctype'
 		PRINT 'Error Message' + ERROR_MESSAGE();
 		PRINT 'Error Message' + CAST (ERROR_NUMBER() AS NVARCHAR);
 		PRINT 'Error Message' + CAST (ERROR_STATE() AS NVARCHAR);
