@@ -19,4 +19,5 @@ CREATE TABLE gold.dim_item
     latin_name VARCHAR(50) NOT NULL,
     sub_group SMALLINT NOT NULL,
     supplier INT NOT NULL,
+	last_update DATETIME DEFAULT(GETDATE()) NOT NULL
 );

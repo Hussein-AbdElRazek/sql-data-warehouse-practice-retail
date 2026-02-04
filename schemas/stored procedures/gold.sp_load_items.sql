@@ -22,21 +22,43 @@ BEGIN
 		PRINT 'Loading gold items';
 		PRINT '================================================';
 
-		INSERT INTO h_db.gold.dim_item (
-			itemean,
-			arabic_name,
-			latin_name,
-			sub_group,
-			supplier
-		)
-		
-		SELECT	
-			itemean,
-			arabic_name,
-			latin_name,
-			sub_group,
-			supplier
-		FROM h_db.silver.erp_sys_item
+		MERGE gold.dim_item AS target
+		USING silver.erp_sys_item AS source
+		ON target.itemean = source.itemean
+		WHEN MATCHED
+			AND 
+				target.arabic_name != source.arabic_name OR
+				target.latin_name != source.latin_name OR
+				target.sub_group != source.sub_group OR
+				target.supplier != source.supplier 
+			THEN
+				UPDATE SET
+					target.arabic_name = source.arabic_name,
+					target.latin_name = source.latin_name,
+					target.sub_group = source.sub_group,
+					target.supplier = source.supplier
+					target.last_update = GETDATE()
+		WHEN NOT MATCHED BY target 
+			THEN
+				INSERT(
+					itemean,
+					arabic_name,
+					latin_name,
+					sub_group,
+					supplier,
+					last_update
+				)
+				VALUES(
+					source.branch,
+					source.arabic_name,
+					source.latin_name,
+					source.sub_group,
+					source.supplier,
+					GETDATE()
+				)
+		WHEN NOT MATCHED BY source
+			THEN
+				DELETE;		
 
 		SET @end_time = GETDATE()
 		PRINT '>> Load duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds'

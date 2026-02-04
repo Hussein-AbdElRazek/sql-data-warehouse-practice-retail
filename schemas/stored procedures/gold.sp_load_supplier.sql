@@ -21,18 +21,34 @@ BEGIN
 		PRINT '================================================';
 		PRINT 'Loading gold supplier';
 		PRINT '================================================';
-
-		INSERT INTO h_db.gold.dim_supplier (
-			supplier,
-    			arabic_name,
-    			latin_name
-		)
 		
-		SELECT	
-			supplier,
-    			arabic_name,
-    			latin_name
-		FROM h_db.silver.erp_sys_supplier
+		MERGE gold.dim_supplier AS target
+		USING silver.erp_sys_supplier AS source
+		ON target.supplier = source.supplier
+		WHEN MATCHED
+			AND
+				target.arabic_name != source.arabic_name OR
+				target.latin_name != source.latin_name OR
+			THEN
+				UPDATE SET
+					target.arabic_name = source.arabic_name,
+					target.latin_name = source.latin_name,
+					target.last_update = GETDATE()
+		WHEN NOT MATCHED BY target
+			THEN
+				INSERT(
+					arabic_name,
+					latin_name,
+					last_update
+				)
+				VALUES(
+					source.arabic_name,
+					source.latin_name,
+					GETDATE()
+				)
+		WHEN NOT MATCHED BY source
+			THEN
+				DELETE;
 
 		SET @end_time = GETDATE()
 		PRINT '>> Load duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds'
