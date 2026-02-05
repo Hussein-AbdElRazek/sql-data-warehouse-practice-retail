@@ -33,7 +33,7 @@ BEGIN
 			ISNULL(TRIM(a_name), 'N/A'),
 			ISNULL(TRIM(l_name), 'N/A')
 		FROM h_db.bronze.erp_sys_doctype
-		where
+		WHERE
 			systemcode IN (10) --and usage = 1-- sales
 
 		INSERT INTO h_db.silver.erp_sys_doctype
